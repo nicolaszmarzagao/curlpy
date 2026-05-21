@@ -4,8 +4,12 @@ from urllib.parse import urlparse
 def get_default_port(scheme):
     if scheme == "https": 
         return 443
-    elif scheme == "http": 
+    else:
         return 80
+
+def valid_scheme(scheme):
+    if scheme == "http" or scheme == "https":
+        return True
     else:
         raise ValueError("Unsupported scheme")
 
@@ -13,6 +17,7 @@ def valid_method(method):
     return method in ['GET']
 
 def decide_port(url_port, arg_port, scheme):
+    valid_scheme(scheme)
     if arg_port is not None:
         port = arg_port
     elif url_port is not None:
@@ -24,9 +29,15 @@ def decide_port(url_port, arg_port, scheme):
 
 def create_request(args):
     parsed_url = urlparse(args.url)
-    port       = decide_port(parsed_url.port, args.port, args.scheme)
 
-    if not valid_method(args.method):
+    valid_scheme(parsed_url.scheme)
+
+    port       = decide_port(parsed_url.port, args.port, parsed_url.scheme)
+    method     = args.method
+
+    if method is None:
+        method = "GET"
+    elif not valid_method(method):
         raise ValueError("Unsupported method")
 
     return HttpRequest(
@@ -34,5 +45,5 @@ def create_request(args):
         host=parsed_url.hostname,
         port=port,
         path=parsed_url.path,
-        method=args.method
+        method=method
     )
