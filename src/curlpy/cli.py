@@ -1,6 +1,7 @@
 import argparse
-from .parser import parse_arguments
+from .parser  import create_request
 from .request import make_request
+
 
 def setup_arguments():
     parser = argparse.ArgumentParser(
@@ -19,15 +20,19 @@ def setup_arguments():
         "-i", "--include-headers",
         action="store_true", help="Keeps HTTP header in output."
     )
+    parser.add_argument(
+        "-m", "--method",
+        type=str, help="HTTP method to use ie. GET, POST..."
+    )
 
-    return parser
+    return parser.parse_args()
 
 def main() -> None:
-    parser     = setup_arguments()
-    request    = parse_arguments(parser)
+    args       = setup_arguments()
+    request    = create_request(args)
     response   = make_request(request).decode(errors="replace")
 
-    if parser.parse_args().include_headers is False: 
+    if args.include_headers is False: 
         print(response.split("\r\n\r\n")[1])
     else:
         print(response)
