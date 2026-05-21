@@ -3,6 +3,12 @@ import socket
 import ssl
 from urllib.parse import urlparse
 
+def get_default_port(scheme):
+    if scheme == "https": 
+        return 443
+    else: 
+        return 80
+
 def main() -> None:
     parser = argparse.ArgumentParser(
         prog="curlpy",
@@ -10,15 +16,25 @@ def main() -> None:
     )
 
     parser.add_argument("url", type=str, help="URL curl will connect to.")
+    parser.add_argument(
+        "-p", "--port", 
+        type=int, help="Port that curl will connect to."
+    )
 
     args = parser.parse_args()
-
     parsed_url = urlparse(args.url)
 
-    raw_sock = socket.create_connection((parsed_url.hostname, 443))
-    context = ssl.create_default_context()
+    if args.port is not None:
+        port = args.port
+    elif parsed_url.port is not None:
+        port = parsed_url.port
+    else:
+        port = get_default_port(parsed_url.scheme)
 
-    s = context.wrap_socket(raw_sock, server_hostname=parsed_url.hostname)
+    s = socket.create_connection((parsed_url.hostname, port))
+    if parsed_url.scheme == "https":
+        context = ssl.create_default_context()
+        s = context.wrap_socket(s, server_hostname=parsed_url.hostname)
 
     get_request = (
         f"GET {parsed_url.path} HTTP/1.1\r\n"
@@ -38,6 +54,6 @@ def main() -> None:
 
     s.close()
 
-    print(response.decode(errors="replace"))
+    print(response.decode(errors="replace").split("\r\n\r\n")[1])
 
 
