@@ -1,8 +1,7 @@
 # cURLpy
 A curl implementation from scratch using Python3.
 
-The **goal** of this project is to use as few dependencies as possible (prefreribly
-None!)
+The **goal** of this project is to use as few dependencies as possible (PREFERABLY NONE!)
 
 **Current Status:** This project currently has no dependencies.
 
