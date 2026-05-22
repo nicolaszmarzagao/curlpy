@@ -7,8 +7,6 @@ None!)
 **Current Status:** This project currently has no dependencies.
 
 ### Quickstart
-This project has no dependencies other then python3 standerd library.
-
 ```bash
 # Clone the repository using ssh
 git clone git@github.com:nicolaszmarzagao/curlpy.git
