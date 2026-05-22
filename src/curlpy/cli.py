@@ -21,8 +21,8 @@ def setup_arguments():
         action="store_true", help="Keeps HTTP header in output."
     )
     parser.add_argument(
-        "-m", "--method",
-        type=str, help="HTTP method to use ie. GET, POST..."
+        "-X", "--request",
+        type=str, help="HTTP methods to use ie. GET, POST..."
     )
 
     return parser.parse_args()
