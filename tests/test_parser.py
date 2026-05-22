@@ -1,6 +1,7 @@
 import unittest
 import argparse
 from curlpy.parser import decide_port, create_request
+from curlpy.models import HttpRequest
 
 class TestParser(unittest.TestCase):
     def test_decide_port(self):
@@ -33,16 +34,20 @@ class TestParser(unittest.TestCase):
 
     def test_create_request_simple_case(self):
         n = argparse.Namespace(
-            url="https://example.com",
+            url="https://example.com/",
             port=80,
             method="GET",
         )
 
-        # cant do one equals the other because they have diffrent attributes
-        self.assertEqual(
-            create_request(n).port,
-            80,
+        result = create_request(n)
+        answer = HttpRequest (
+            scheme="https",
+            host="example.com",
+            port=80,
+            path="/",
+            method="GET"
         )
+        self.assertEqual(result,answer)
     
     def test_create_request_value_error(self):
         n = argparse.Namespace (
