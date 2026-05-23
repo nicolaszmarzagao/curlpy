@@ -11,6 +11,7 @@ def wrap_socket(socket, scheme, host):
 
 # add agent later
 def create_request(method, path, host):
+    path = path or "/"
     return (
         f"{method} {path} HTTP/1.1\r\n"
         f"Host: {host}\r\n"

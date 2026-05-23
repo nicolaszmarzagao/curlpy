@@ -39,12 +39,13 @@ def create_request(args):
     valid_scheme(parsed_url.scheme)
 
     port = decide_port(parsed_url.port, args.port, parsed_url.scheme)
-    method = args.method
 
-    if method is None:
+    if hasattr(args, "method"):
+        method = args.method
+        if not valid_method(method):
+            raise ValueError("Unsupported method")
+    else:
         method = "GET"
-    elif not valid_method(method):
-        raise ValueError("Unsupported method")
 
     return HttpRequest(
         scheme=parsed_url.scheme,
