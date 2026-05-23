@@ -1,6 +1,7 @@
 import socket
 import ssl
 
+
 def make_request(request):
     s = socket.create_connection((request.host, request.port))
 

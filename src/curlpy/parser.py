@@ -1,11 +1,14 @@
-from .models import HttpRequest
 from urllib.parse import urlparse
 
+from .models import HttpRequest
+
+
 def get_default_port(scheme):
-    if scheme == "https": 
+    if scheme == "https":
         return 443
     else:
         return 80
+
 
 def valid_scheme(scheme):
     if scheme == "http" or scheme == "https":
@@ -13,8 +16,10 @@ def valid_scheme(scheme):
     else:
         raise ValueError("Unsupported scheme")
 
+
 def valid_method(method):
-    return method in ['GET']
+    return method in ["GET"]
+
 
 def decide_port(url_port, arg_port, scheme):
     valid_scheme(scheme)
@@ -27,13 +32,14 @@ def decide_port(url_port, arg_port, scheme):
 
     return port
 
+
 def create_request(args):
     parsed_url = urlparse(args.url)
 
     valid_scheme(parsed_url.scheme)
 
-    port       = decide_port(parsed_url.port, args.port, parsed_url.scheme)
-    method     = args.method
+    port = decide_port(parsed_url.port, args.port, parsed_url.scheme)
+    method = args.method
 
     if method is None:
         method = "GET"
@@ -45,5 +51,5 @@ def create_request(args):
         host=parsed_url.hostname,
         port=port,
         path=parsed_url.path,
-        method=method
+        method=method,
     )
