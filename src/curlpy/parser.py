@@ -2,6 +2,10 @@ from urllib.parse import urlparse
 
 from .models import HttpRequest
 
+def normalize_url(url):
+    if "://" not in url:
+        return "http://" + url
+    return url
 
 def get_default_port(scheme):
     if scheme == "https":
@@ -34,11 +38,15 @@ def decide_port(url_port, arg_port, scheme):
 
 
 def create_request(args):
-    parsed_url = urlparse(args.url)
+    parsed_url = urlparse(normalize_url(args.url))
 
-    valid_scheme(parsed_url.scheme)
+    scheme = parsed_url.scheme
+    if hasattr(args, "scheme"):
+        valid_scheme(parsed_url.scheme)
+    else:
+        scheme = "http"
 
-    port = decide_port(parsed_url.port, args.port, parsed_url.scheme)
+    port = decide_port(parsed_url.port, args.port, scheme)
 
     if hasattr(args, "method"):
         method = args.method
@@ -48,7 +56,7 @@ def create_request(args):
         method = "GET"
 
     return HttpRequest(
-        scheme=parsed_url.scheme,
+        scheme=scheme,
         host=parsed_url.hostname,
         port=port,
         path=parsed_url.path,
