@@ -1,68 +1,97 @@
 # cURLpy
-A curl implementation from scratch using Python3.
 
-The **goal** of this project is to use as few dependencies as possible (PREFERABLY NONE!)
+A simple `curl` implementation built from scratch using Python 3.
 
-**Current Status:** This project currently has no dependencies.
+The goal of this project is to use as few dependencies as possible — preferably none.
 
-### Install using pip
+**Current status:** This project currently has no dependencies.
+
+## Installation
+
+Install from PyPI:
+
 ```bash
 pip install curlpy-nicolaszmarzagao
 ```
 
-### Usage
-curlpy works the same way as curl does, here are some features already implemented:
+## Usage
 
-### GET Requests 
+cURLpy works similarly to `curl`. Here are some features already implemented:
 
-- To ```HTTP```
+### GET Requests
+
+#### HTTP
+
 ```bash
 python3 -m curlpy example.com
 ```
 
-- To ```HTTPS```
+#### HTTPS
+
 ```bash
 python3 -m curlpy https://example.com
 ```
 
-- To specific ```path```
+#### Specific path
+
 ```bash
 python3 -m curlpy https://example.com/hello/world
 ```
 
-- To specific ```port```
+#### Specific port
+
 ```bash
 python3 -m curlpy https://example.com:8080
 ```
-or
+
+Or:
+
 ```bash
 python3 -m curlpy https://example.com/ -p 8080
 ```
 
-- Include ```HTTP header```
+#### Include HTTP headers
+
 ```bash
 python3 -m curlpy example.com -i
 ```
 
-### Local Package
+## Local Development
+
+Clone the repository using SSH:
+
 ```bash
-# Clone the repository using ssh
 git clone git@github.com:nicolaszmarzagao/curlpy.git
 cd curlpy
+```
 
-# Activate the python3 virtual enviroument then install cURLpy locally
+Create and activate a virtual environment:
+
+```bash
 python3 -m venv .venv
 source .venv/bin/activate
+```
+
+Install cURLpy locally in editable mode:
+
+```bash
 python3 -m pip install -e .
 ```
-And that's it!
+
+Run the tests:
+
 ```bash
-# use this command to test curlpy
-python3 -m unittest
-# and this one to run
+python3 -m unittest discover -s tests -v
+```
+
+Run cURLpy:
+
+```bash
 python3 -m curlpy
 ```
 
-### Contributing
-Feel free to fork and repository as this project is under the MIT License.
-You can also contribute to any issues, report issues or suggest features.
+## Contributing
+
+Feel free to fork this repository, open issues, suggest features, or contribute with pull requests.
+
+This project is licensed under the MIT License.
