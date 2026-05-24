@@ -2,11 +2,11 @@ import socket
 import ssl
 
 
-def wrap_socket(socket, scheme, host):
+def wrap_socket(sock, scheme, host):
     if scheme == "https":
         context = ssl.create_default_context()
-        return context.wrap_socket(socket, server_hostname=host)
-    return socket
+        return context.wrap_socket(sock, server_hostname=host)
+    return sock
 
 
 # add agent later
@@ -21,10 +21,10 @@ def create_request(method, path, host):
     )
 
 
-def receive_response(socket):
+def receive_response(sock):
     response = b""
     while True:
-        chunk = socket.recv(4096)
+        chunk = sock.recv(4096)
         if not chunk:
             break
         response += chunk
