@@ -12,19 +12,19 @@ def wrap_socket(sock, scheme, host):
 # add agent later
 def create_request(method, path, host, data=""):
     path = path or "/"
-    request =  (
+    request = (
         f"{method} {path} HTTP/1.1\r\n"
         f"Host: {host}\r\n"
-        f"User-Agent: curlpy/0.1\r\n"
-        f"Connection: close\r\n"
-        f"\r\n"
+        "User-Agent: curlpy/0.1\r\n"
+        "Connection: close\r\n"
     )
+    if data:
+        request += f"Content-Length: {len(data)}\r\n"
 
-    if data != "":
-        request += f"{data}\r\n"
-
+    request += "\r\n"
+    if data:
+        request += data
     return request
-
 
 
 def receive_response(sock):
