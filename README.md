@@ -56,6 +56,30 @@ python3 -m curlpy https://example.com/ -p 8080
 python3 -m curlpy example.com -i
 ```
 
+### POST Requests
+
+Use the `-d` / `--data` flag to send data in the request body. This automatically makes it a POST request.
+
+#### Form data
+
+```bash
+python3 -m curlpy example.com/api -d "name=john&age=30"
+```
+
+#### JSON
+
+```bash
+python3 -m curlpy example.com/api -d '{"name": "john"}' -H "Content-Type: application/json"
+```
+
+#### Override the method
+
+`-d` defaults to POST, but you can override it with `-X`:
+
+```bash
+python3 -m curlpy example.com/api -d '{"name": "john"}' -X PUT
+```
+
 ## Local Development
 
 Clone the repository using SSH:
