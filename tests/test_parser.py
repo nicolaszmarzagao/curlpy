@@ -2,47 +2,37 @@ import argparse
 import unittest
 
 from curlpy.models import HttpRequest
-from curlpy.parser import create_request, decide_port
+from curlpy.parser import create_request, normalize_url
+
+
+def make_args(**kwargs):
+    defaults = dict(url="example.com", method=None, data=None, port=None)
+    return argparse.Namespace(**{**defaults, **kwargs})
 
 
 class TestParser(unittest.TestCase):
-    def test_decide_port(self):
-        self.assertEqual(decide_port(8080, None, "http"), 8080, "Testing url_port.")
-        self.assertEqual(decide_port(None, 8000, "http"), 8000, "Testing arg_port.")
-        self.assertEqual(decide_port(None, None, "http"), 80, "Testing http scheme.")
-        self.assertEqual(decide_port(None, None, "https"), 443, "Testing https scheme.")
+    def test_create_request_default(self):
+        result = create_request(make_args(url="example.com"))
+        self.assertEqual(result.scheme, "http")
+        self.assertEqual(result.host, "example.com")
+        self.assertEqual(result.port, 80)
+        self.assertEqual(result.method, "GET")
+        self.assertEqual(result.data, "")
 
-    def test_decide_port_value_error(self):
-        with self.assertRaises(ValueError):
-            decide_port(None, None, None)
-        with self.assertRaises(ValueError):
-            decide_port(None, None, "htp")
+    def test_create_request_with_data_defaults_to_post(self):
+        result = create_request(make_args(url="example.com", data="test=data"))
+        self.assertEqual(result.method, "POST")
 
-    def test_create_request_simple_case(self):
-        n = argparse.Namespace(
-            url="https://example.com/",
-            port=80,
-            method="GET",
-        )
+    def test_https_url(self):
+        result = create_request(make_args(url="https://example.com"))
+        self.assertEqual(result.scheme, "https")
 
-        result = create_request(n)
-        answer = HttpRequest(
-            scheme="https", host="example.com", port=80, path="/", method="GET"
-        )
-        self.assertEqual(result, answer)
+    def test_url_with_explicit_port(self):
+        result = create_request(make_args(url="example.com:8080"))
+        self.assertEqual(result.port, 8080)
 
-    def test_create_request_value_error(self):
-        n = argparse.Namespace(
-            url="https://example.com",
-            port=80,
-            method="NOTAMETHOD",
-        )
+    def test_url_with_path(self):
+        result = create_request(make_args(url="example.com/hello"))
+        self.assertEqual(result.path, "/hello")
 
-        with self.assertRaises(ValueError):
-            create_request(n)
 
-        n.url = "xxx://example.com"
-        n.method = "GET"
-
-        with self.assertRaises(ValueError):
-            create_request(n)

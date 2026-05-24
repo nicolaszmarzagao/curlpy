@@ -24,43 +24,44 @@ def valid_scheme(scheme):
 
 
 def valid_method(method):
-    return method in ["GET"]
+    if method not in ["GET", "POST"]:
+        raise ValueError(f"Unsupported method: {method}")
 
 
-def decide_port(url_port, arg_port, scheme):
-    valid_scheme(scheme)
-    if arg_port is not None:
-        port = arg_port
-    elif url_port is not None:
-        port = url_port
-    else:
-        port = get_default_port(scheme)
+def parse_args(args, parsed_url):
+    return HttpRequest(
+        scheme=get_scheme(parsed_url.scheme),
+        host=parsed_url.hostname,
+        port=get_port(getattr(args, "port", None), parsed_url.port, parsed_url.scheme),
+        path=parsed_url.path or "/",
+        method=get_method(getattr(args, "method", None), getattr(args, "data", None)),
+        data=getattr(args, "data", None) or "",
+    )
 
-    return port
+
+def get_scheme(scheme):
+    if scheme:
+        valid_scheme(scheme)
+        return scheme
+    return "http"
+
+
+def get_port(args_port, url_port, scheme):
+    if args_port:
+        return args_port
+    elif url_port:
+        return url_port
+    return get_default_port(scheme)
+
+
+def get_method(args_method, args_data):
+    if args_method:
+        valid_method(args_method)
+        return args_method
+    elif args_data:
+        return "POST"
+    return "GET"
 
 
 def create_request(args):
-    parsed_url = urlparse(normalize_url(args.url))
-
-    scheme = parsed_url.scheme
-    if hasattr(parsed_url, "scheme"):
-        valid_scheme(parsed_url.scheme)
-    else:
-        scheme = "http"
-
-    port = decide_port(parsed_url.port, args.port, scheme)
-
-    if hasattr(args, "method"):
-        method = args.method
-        if not valid_method(method):
-            raise ValueError("Unsupported method")
-    else:
-        method = "GET"
-
-    return HttpRequest(
-        scheme=scheme,
-        host=parsed_url.hostname,
-        port=port,
-        path=parsed_url.path,
-        method=method,
-    )
+    return parse_args(args, urlparse(normalize_url(args.url)))
