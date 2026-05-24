@@ -24,19 +24,7 @@ def valid_scheme(scheme):
 
 
 def valid_method(method):
-    return method in ["GET"]
-
-
-def decide_port(url_port, arg_port, scheme):
-    valid_scheme(scheme)
-    if arg_port is not None:
-        port = arg_port
-    elif url_port is not None:
-        port = url_port
-    else:
-        port = get_default_port(scheme)
-
-    return port
+    return method in ["GET", "POST"]
 
 
 def create_request(args):
@@ -48,19 +36,28 @@ def create_request(args):
     else:
         scheme = "http"
 
-    port = decide_port(parsed_url.port, args.port, scheme)
-
+    port = get_default_port(parsed_url.scheme)
+    if hasattr(args, "port") and args.port:
+        port = args.port
+    elif parsed_url.port:
+        port = parsed_url.port
+    
+    method = "GET"
     if hasattr(args, "method"):
         method = args.method
         if not valid_method(method):
             raise ValueError("Unsupported method")
-    else:
-        method = "GET"
+
+    data = ""
+    if hasattr(args, "data"):
+        data = args.data
+        method = "POST"
 
     return HttpRequest(
         scheme=scheme,
         host=parsed_url.hostname,
         port=port,
-        path=parsed_url.path,
+        path=parsed_url.path or "/",
         method=method,
+        data=data,
     )

@@ -2,22 +2,10 @@ import argparse
 import unittest
 
 from curlpy.models import HttpRequest
-from curlpy.parser import create_request, decide_port
+from curlpy.parser import create_request
 
 
 class TestParser(unittest.TestCase):
-    def test_decide_port(self):
-        self.assertEqual(decide_port(8080, None, "http"), 8080, "Testing url_port.")
-        self.assertEqual(decide_port(None, 8000, "http"), 8000, "Testing arg_port.")
-        self.assertEqual(decide_port(None, None, "http"), 80, "Testing http scheme.")
-        self.assertEqual(decide_port(None, None, "https"), 443, "Testing https scheme.")
-
-    def test_decide_port_value_error(self):
-        with self.assertRaises(ValueError):
-            decide_port(None, None, None)
-        with self.assertRaises(ValueError):
-            decide_port(None, None, "htp")
-
     def test_create_request_simple_case(self):
         n = argparse.Namespace(
             url="https://example.com/",
@@ -46,3 +34,17 @@ class TestParser(unittest.TestCase):
 
         with self.assertRaises(ValueError):
             create_request(n)
+
+    def test_create_request_post_case(self):
+        n = argparse.Namespace(url="example.com", data="test=data")
+        result = create_request(n)
+        answer = HttpRequest(
+            scheme="http",
+            host="example.com",
+            port=80,
+            path="/",
+            method="POST",
+            data="test=data",
+        )
+
+        self.assertEqual(result, answer)

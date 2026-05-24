@@ -8,3 +8,4 @@ class HttpRequest:
     port: int
     path: str
     method: str
+    data: str = ""

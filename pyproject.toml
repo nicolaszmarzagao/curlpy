@@ -1,6 +1,6 @@
 [project]
 name = "curlpy_nicolaszmarzagao"
-version = "0.1.0"
+version = "0.1.1"
 authors = [
     { name="Nicolas Z Marzagão", email="nicolas.marzagao@gmail.com"},
 ]

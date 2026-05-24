@@ -10,15 +10,21 @@ def wrap_socket(sock, scheme, host):
 
 
 # add agent later
-def create_request(method, path, host):
+def create_request(method, path, host, data=""):
     path = path or "/"
-    return (
+    request =  (
         f"{method} {path} HTTP/1.1\r\n"
         f"Host: {host}\r\n"
         f"User-Agent: curlpy/0.1\r\n"
         f"Connection: close\r\n"
         f"\r\n"
     )
+
+    if data != "":
+        request += f"{data}\r\n"
+
+    return request
+
 
 
 def receive_response(sock):
@@ -33,12 +39,13 @@ def receive_response(sock):
 
 
 def make_request(request):
+    # needs try blocks here
     socket_con = wrap_socket(
         socket.create_connection((request.host, request.port)),
         request.scheme,
         request.host,
     )
-    request = create_request(request.method, request.path, request.host)
+    request = create_request(request.method, request.path, request.host, request.data)
     socket_con.sendall(request.encode())
     response = receive_response(socket_con)
 

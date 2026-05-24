@@ -22,13 +22,21 @@ def setup_arguments():
     parser.add_argument(
         "-X", "--request", type=str, help="HTTP methods to use ie. GET, POST..."
     )
+    parser.add_argument(
+        "-d", "--data", type=str, help="Makes a POST request with a body"
+    )
 
     return parser.parse_args()
 
 
 def main() -> None:
     args = setup_arguments()
-    request = create_request(args)
+
+    try:
+        request = create_request(args)
+    except Exception as e:
+        print(f"[ERROR] {e}")
+
     response = make_request(request).decode(errors="replace")
 
     if args.include_headers is False:
