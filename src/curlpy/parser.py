@@ -32,10 +32,10 @@ def parse_args(args, parsed_url):
     return HttpRequest(
         scheme=get_scheme(parsed_url.scheme),
         host=parsed_url.hostname,
-        port=get_port(args.port, parsed_url.port, parsed_url.scheme),
+        port=get_port(getattr(args, "port", None), parsed_url.port, parsed_url.scheme),
         path=parsed_url.path or "/",
-        method=get_method(args.method, args.data),
-        data=args.data or "",
+        method=get_method(getattr(args, "method", None), getattr(args, "data", None)),
+        data=getattr(args, "data", None) or "",
     )
 
 

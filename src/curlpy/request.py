@@ -45,8 +45,8 @@ def make_request(request):
         request.scheme,
         request.host,
     )
-    request = create_request(request.method, request.path, request.host, request.data)
-    socket_con.sendall(request.encode())
+    raw_request = create_request(request.method, request.path, request.host, request.data)
+    socket_con.sendall(raw_request.encode())
     response = receive_response(socket_con)
 
     socket_con.close()
