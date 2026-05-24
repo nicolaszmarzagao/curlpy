@@ -46,7 +46,3 @@ class TestParser(unittest.TestCase):
 
         with self.assertRaises(ValueError):
             create_request(n)
-
-
-if __name__ == "__main__":
-    unittest.main()
