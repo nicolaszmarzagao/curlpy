@@ -10,6 +10,40 @@ The **goal** of this project is to use as few dependencies as possible (PREFERAB
 pip install curlpy-nicolaszmarzagao
 ```
 
+### Usage
+curlpy works the same way as curl does, here are some features already implemented:
+
+### GET Requests 
+
+- To ```HTTP```
+```bash
+python3 -m curlpy example.com
+```
+
+- To ```HTTPS```
+```bash
+python3 -m curlpy https://example.com
+```
+
+- To specific ```path```
+```bash
+python3 -m curlpy https://example.com/hello/world
+```
+
+- To specific ```port```
+```bash
+python3 -m curlpy https://example.com:8080
+```
+or
+```bash
+python3 -m curlpy https://example.com/ -p 8080
+```
+
+- Include ```HTTP header```
+```bash
+python3 -m curlpy example.com -i
+```
+
 ### Local Package
 ```bash
 # Clone the repository using ssh
