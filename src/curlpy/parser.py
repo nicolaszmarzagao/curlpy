@@ -41,7 +41,7 @@ def create_request(args):
     parsed_url = urlparse(normalize_url(args.url))
 
     scheme = parsed_url.scheme
-    if hasattr(args, "scheme"):
+    if hasattr(parsed_url, "scheme"):
         valid_scheme(parsed_url.scheme)
     else:
         scheme = "http"
