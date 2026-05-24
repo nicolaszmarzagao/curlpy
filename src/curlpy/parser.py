@@ -2,10 +2,12 @@ from urllib.parse import urlparse
 
 from .models import HttpRequest
 
+
 def normalize_url(url):
     if "://" not in url:
         return "http://" + url
     return url
+
 
 def get_default_port(scheme):
     if scheme == "https":
