@@ -5,7 +5,12 @@ The **goal** of this project is to use as few dependencies as possible (PREFERAB
 
 **Current Status:** This project currently has no dependencies.
 
-### Quickstart
+### Install using pip
+```bash
+pip install curlpy-nicolaszmarzagao
+```
+
+### Local Package
 ```bash
 # Clone the repository using ssh
 git clone git@github.com:nicolaszmarzagao/curlpy.git
